@@ -1,6 +1,4 @@
-# files
-.env
+#files
 
 # directories
 .vscode/
-.venv/

@@ -11,8 +11,8 @@
     "43"
   ],
   "url": "https://github.com/Tejaromalius/RoGB",
-  "version": 1.0,
+  "version": 2,
   "settings-schema": "org.gnome.shell.extensions.rogb",
   "dependencies": [],
-  "icon": "top-bar-icon.png"
+  "icon": "icons/top-bar-icon.png"
 }

@@ -1,1 +1,0 @@
-gnome-extension-publisher>=0.4.10

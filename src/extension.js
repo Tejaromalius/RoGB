@@ -1,5 +1,4 @@
 const GETTEXT_DOMAIN = 'rogb@tayefi.ilia.protonmail.com';
-
 const { GObject, St, GLib, Gio } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Main = imports.ui.main;
@@ -8,16 +7,22 @@ const PopupMenu = imports.ui.popupMenu;
 
 const _ = ExtensionUtils.gettext;
 
-class Indicator extends GObject.registerClass(
+// Properly register the Indicator class
+var Indicator = GObject.registerClass(
   class Indicator extends PanelMenu.Button {
     _init() {
+      // Call parent constructor
       super._init(0.0, _('RoGB'));
 
       // Add custom icon
-      this.add_child(new St.Icon({
-        icon_file: GLib.build_filenamev([ExtensionUtils.getCurrentExtension().path, 'top-bar-icon.png']),
+      let iconPath = GLib.build_filenamev([ExtensionUtils.getCurrentExtension().path, 'icons', 'top-bar-icon.png']);
+      let gicon = new Gio.FileIcon({ file: Gio.File.new_for_path(iconPath) });
+
+      let icon = new St.Icon({
+        gicon: gicon,
         style_class: 'system-status-icon',
-      }));
+      });
+      this.add_child(icon);
 
       // Left-click event to show the color picker
       this.connect('button-press-event', (actor, event) => {
@@ -32,44 +37,34 @@ class Indicator extends GObject.registerClass(
           this.setRandomColor();
         }
       });
-
-      // Menu item for the color picker
-      let item = new PopupMenu.PopupMenuItem(_('Pick Color'));
-      item.connect('activate', () => {
-        this._showColorPicker();
-      });
-      this.menu.addMenuItem(item);
     }
 
     _showColorPicker() {
       // Launch the Zenity color picker
-      let [success, pid, stdin, stdout, stderr] = GLib.spawn_async_with_pipes(
+      GLib.spawn_async_with_pipes(
         null,
         ['zenity', '--color-selection'],
         null,
         GLib.SpawnFlags.SEARCH_PATH,
-        null
-      );
-
-      let outStream = new Gio.DataInputStream({
-        base_stream: new Gio.UnixInputStream({ fd: stdout, close_fd: true })
-      });
-
-      new Gio.SimpleAsyncResult().attach(outStream.read_line_async(
-        GLib.PRIORITY_DEFAULT,
         null,
-        (stream, res) => {
-          let [line] = stream.read_line_finish(res);
-          let color = new TextDecoder().decode(line).trim();
+        (pid, stdin, stdout, stderr) => {
+          let outStream = new Gio.DataInputStream({
+            base_stream: new Gio.UnixInputStream({ fd: stdout, close_fd: true })
+          });
 
-          if (color.startsWith('rgb')) {
-            color = this.rgbToHex(color);
-          }
+          outStream.read_line_async(GLib.PRIORITY_DEFAULT, null, (stream, res) => {
+            let [line] = stream.read_line_finish(res);
+            let color = new TextDecoder().decode(line).trim();
 
-          log(`Selected Color (Hex): ${color}`);
-          this.setAsusLedColor(color);
+            if (color.startsWith('rgb')) {
+              color = this.rgbToHex(color);
+            }
+
+            log(`Selected Color (Hex): ${color}`);
+            this.setAsusLedColor(color);
+          });
         }
-      ));
+      );
     }
 
     setRandomColor() {
@@ -107,9 +102,9 @@ class Indicator extends GObject.registerClass(
         logError(e);
       }
     }
-  }
-) { }
+  });
 
+// Extension class to manage enable/disable
 class Extension {
   constructor(uuid) {
     this._uuid = uuid;
@@ -127,7 +122,7 @@ class Extension {
   }
 }
 
+// Init function for the extension
 function init(meta) {
   return new Extension(meta.uuid);
 }
-
