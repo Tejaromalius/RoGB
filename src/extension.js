@@ -7,11 +7,9 @@ const PopupMenu = imports.ui.popupMenu;
 
 const _ = ExtensionUtils.gettext;
 
-// Properly register the Indicator class
 var Indicator = GObject.registerClass(
   class Indicator extends PanelMenu.Button {
     _init() {
-      // Call parent constructor
       super._init(0.0, _('RoGB'));
 
       // Add custom icon
@@ -24,14 +22,12 @@ var Indicator = GObject.registerClass(
       });
       this.add_child(icon);
 
-      // Left-click event to show the color picker
       this.connect('button-press-event', (actor, event) => {
         if (event.get_button() === 1) { // Left-click
           this._showColorPicker();
         }
       });
 
-      // Right-click event to set a random color
       this.connect('button-press-event', (actor, event) => {
         if (event.get_button() === 3) { // Right-click
           this.setRandomColor();
@@ -40,32 +36,31 @@ var Indicator = GObject.registerClass(
     }
 
     _showColorPicker() {
-      // Launch the Zenity color picker
-      GLib.spawn_async_with_pipes(
+      let [success, pid, stdin, stdout, stderr] = GLib.spawn_async_with_pipes(
         null,
         ['zenity', '--color-selection'],
         null,
         GLib.SpawnFlags.SEARCH_PATH,
-        null,
-        (pid, stdin, stdout, stderr) => {
-          let outStream = new Gio.DataInputStream({
-            base_stream: new Gio.UnixInputStream({ fd: stdout, close_fd: true })
-          });
-
-          outStream.read_line_async(GLib.PRIORITY_DEFAULT, null, (stream, res) => {
-            let [line] = stream.read_line_finish(res);
-            let color = new TextDecoder().decode(line).trim();
-
-            if (color.startsWith('rgb')) {
-              color = this.rgbToHex(color);
-            }
-
-            log(`Selected Color (Hex): ${color}`);
-            this.setAsusLedColor(color);
-          });
-        }
+        null
       );
+
+      let outStream = new Gio.DataInputStream({
+        base_stream: new Gio.UnixInputStream({ fd: stdout, close_fd: true })
+      });
+
+      outStream.read_line_async(GLib.PRIORITY_DEFAULT, null, (stream, res) => {
+        let [line] = stream.read_line_finish(res);
+        let color = new TextDecoder().decode(line).trim();
+
+        if (color.startsWith('rgb')) {
+          color = this.rgbToHex(color);
+        }
+
+        log(`Selected Color (Hex): ${color}`);
+        this.setAsusLedColor(color);
+      });
     }
+
 
     setRandomColor() {
       const randomColor = this.getRandomColor();
@@ -104,7 +99,6 @@ var Indicator = GObject.registerClass(
     }
   });
 
-// Extension class to manage enable/disable
 class Extension {
   constructor(uuid) {
     this._uuid = uuid;
@@ -122,7 +116,6 @@ class Extension {
   }
 }
 
-// Init function for the extension
 function init(meta) {
   return new Extension(meta.uuid);
 }
