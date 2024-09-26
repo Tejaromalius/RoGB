@@ -1,0 +1,18 @@
+{
+  "uuid": "rogb@tayefi.ilia.protonmail.com",
+  "name": "RoGB",
+  "description": "A GNOME extension to change ROGs' keyboard color.",
+  "shell-version": [
+    "3.36",
+    "3.38",
+    "40",
+    "41",
+    "42",
+    "43"
+  ],
+  "url": "https://github.com/Tejaromalius/RoGB",
+  "version": 1.0,
+  "settings-schema": "org.gnome.shell.extensions.rogb",
+  "dependencies": [],
+  "icon": "top-bar-icon.png"
+}
