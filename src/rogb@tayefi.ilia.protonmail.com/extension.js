@@ -130,6 +130,14 @@ const Indicator = GObject.registerClass(
         console.error(`Failed to execute command: ${command}`, e);
       }
     }
+
+    destroy() {
+      if (this._scrollTimeoutId) {
+        GLib.Source.remove(this._scrollTimeoutId);
+        this._scrollTimeoutId = null;
+      }
+      super.destroy();
+    }
   }
 );
 
