@@ -1,14 +1,12 @@
-# RoGB GNOME Extension
+# RoGB - GNOME Asus Keyboard RGB Control Extension
 
-## Overview
+RoGB is a GNOME Shell extension that lets you control ASUS device RGB lighting directly from the top bar. It provides a convenient way to change RGB color, adjust brightness, and pick random colors.
 
-RoGB is a GNOME Shell extension that allows users to pick colors and set LED colors on supported ASUS devices. Users can interact with the extension through a top bar icon, which opens a color picker or sets a random color upon right-clicking.
+## Features
 
-## Requirements
-
-- GNOME Shell
-- Zenity
-- [asusctl](https://gitlab.com/asus-linux/asusctl) (for setting LED colors)
+- **Color Picker**: Choose a color for your RGB lighting via a color selection dialog.
+- **Random Color**: Set a random RGB color with a right-click.
+- **Brightness Adjustment**: Increase or decrease brightness via scroll up/down gestures.
 
 ## Installation
 
@@ -16,7 +14,7 @@ RoGB is a GNOME Shell extension that allows users to pick colors and set LED col
 
 1. Visit the [GNOME Shell Extensions website](https://extensions.gnome.org).
 2. Search for "RoGB" or navigate to the extension's page.
-3. Click on the toggle switch to install the extension.
+3. Install the extension.
 
 ### Manual Installation
 
@@ -27,13 +25,15 @@ RoGB is a GNOME Shell extension that allows users to pick colors and set LED col
 
 ## Usage
 
-1. **Left-click** on the extension icon to open the Zenity color picker.
-2. **Right-click** on the icon to set a random LED color.
+1. **Left-Click** on the icon to open the color picker and choose a color.
+2. **Right-Click** to set a random color.
+3. **Scroll Up/Down** over the icon to increase or decrease the brightness of the RGB lighting.
+
+## Requirements
+
+- [`asusctl`](https://gitlab.com/asus-linux/asusctl): Needed for brightness adjustments and color setting on ASUS devices.
+- `zenity`: Provides a color selection dialog.
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0. See the `LICENSE` file for more details.
-
-## Contributing
-
-If you would like to contribute to the RoGB extension, feel free to fork the repository and submit pull requests. Please ensure that your contributions align with the project's coding standards.
+This project is licensed under the GNU General Public License v3.0. See the `LICENSE.txt` file for more details.
