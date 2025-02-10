@@ -31,7 +31,7 @@ RoGB is a GNOME Shell extension that lets you control ASUS device RGB lighting d
 
 ## Requirements
 
-- [`asusctl`](https://gitlab.com/asus-linux/asusctl): Needed for brightness adjustments and color setting on ASUS devices.
+- [`asusctl (^6.11)`](https://gitlab.com/asus-linux/asusctl): Needed for brightness adjustments and color setting on ASUS devices.
 - `zenity`: Provides a color selection dialog.
 
 ## License

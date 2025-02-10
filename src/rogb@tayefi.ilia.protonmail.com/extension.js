@@ -114,7 +114,7 @@ const Indicator = GObject.registerClass(
     }
 
     _setAsusLedColor(color) {
-      this._executeCommand(`asusctl led-mode static -c ${color}`);
+      this._executeCommand(`asusctl aura static -c ${color}`);
     }
 
     _executeCommand(command) {
